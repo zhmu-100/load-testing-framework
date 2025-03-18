@@ -1,0 +1,11 @@
+name: Load Testing
+on: [pull_request]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Locust
+        run: locust -f tests/basic_load_test.py --headless -u 100 -r 10
