@@ -1,20 +1,76 @@
-# load-testing-framework
- репозиторий на GitHub для нагрузочного тестирования на 10k пользователей
+# MAD Gateway Load Testing
+
+ **Нагрузочное тестирование для MAD Gateway**  
+Этот проект реализует сценарии нагрузочного тестирования для микросервисной архитектуры MAD (Mobile Athletic Development) через API Gateway, используя [Locust](https://locust.io/).
+
+---
+
+##  Стек
+
+- **Locust** — для эмуляции пользовательской нагрузки.
+- **Python 3.10+** и виртуальное окружение (`venv`)
+- **Gradle** — для запуска тестов через таски
+- **JWT** — авторизация через токены
+- **Ktor API Gateway** — целевой сервис
+
+##  Настройка
+
+### 1. Установи зависимости
+
+Создай и активируй виртуальное окружение Python:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # или .venv\Scripts\activate на Windows
+pip install -r requirements.txt
+pip install pyjwt
+
+Укажи переменные окружения
+Создай .env файл (или настрой ENV в системе):
+
+env
+JWT_SECRET=development_secret_key
+JWT_ISSUER=com.mad.gateway
+JWT_AUDIENCE=mad-mobile-app
 
 
-Как установить зависимости: pip install -r requirements.txt.
+**Запуск нагрузочного теста через Gradle
+bash
+./gradlew runLocustTest
+По умолчанию:
 
-Как запустить тест: locust -f tests/basic_load_test.py.
+Кол-во пользователей: 10000
+
+Скорость запуска: 100 пользователей/сек
+
+Хост: http://188.225.77.13
 
 
-## Масштабирование для 10 000 пользователей
 
-1. Запустите мастер-ноду:
-   ```bash
-   locust -f tests/basic_load_test.py --master --expect-workers 5
+**Сценарии, покрытые в Locust
+Locust отправляет запросы к следующим API:
 
-2. Запустите воркеров (на каждой машине):
-    locust -f tests/basic_load_test.py --worker --master-host=<MASTER_IP>
+/api/auth/register — регистрация пользователя
 
-3. Откройте веб-интерфейс Locust по адресу http://<MASTER_IP>:8089 и запустите тест.
-    
+/api/auth/login — вход
+
+/api/profiles/me — получить профиль
+
+/api/notebook/notes — создание заметки
+
+/api/training/workouts — список тренировок
+
+/api/feed/posts — создание поста
+
+/api/diet/foods — список продуктов
+
+/api/statistics/calories — загрузка калорий
+
+/api/db/read — произвольный SQL-запрос
+
+**Советы
+Убедись, что Auth-сервис доступен перед запуском, иначе login/register вызовут ошибки.
+
+Используй curl или Postman для ручной отладки ошибок (например, авторизации).
+
+Логи доступны через gateway.log, если включено логирование.
