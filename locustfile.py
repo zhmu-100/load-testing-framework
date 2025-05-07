@@ -84,7 +84,7 @@ class MadUser(HttpUser):
 
     @task
     def get_profile(self):
-        self.client.get(f"{SERVICES['profile']}/profiles", headers=self.headers)
+        self.client.get(f"{SERVICES['profile']}/profiles/22ae8776-b6b8-4e3e-8eab-adf881cab25f", headers=self.headers)
 
     @task
     def create_note(self):
@@ -115,7 +115,7 @@ class MadUser(HttpUser):
     @task
     def upload_calories(self):
         now = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        self.client.post(f"{SERVICES['statistics']}/statistics/calories", headers=self.headers, json={
+        self.client.post(f"{SERVICES['statistics']}/api/statistics/calories", headers=self.headers, json={
             "meta": {
                 "id": "cal-123",
                 "userId": "user-001",
